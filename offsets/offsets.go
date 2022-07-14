@@ -1,7 +1,7 @@
 package offsets
 
 /*
-Dump done: 2022-07-14 01:17:37
+Dump done: 2022-07-14 21:01:06
 Live patch: 12.13.4533037+branch.releases-12-13.code.public
 */
 
@@ -11,10 +11,14 @@ const ( // Basic Offsets
 	ObjectManager    = 0x1870bd8
 	Renderer         = 0x3141584
 	UnderMouseObject = 0x24bfc24
-	ViewProjMatrices = 0x313e6a0 // +0 view +64 projection
+	ViewProjMatrices = 0x313e6a0
 )
 
 const ( // Object related Offsets
+	ObjectMapCount          = 44
+	ObjectMapRoot           = 40
+	ObjectMapNodeNetId      = 16
+	ObjectMapNodeObject     = 20
 	ObjectIndex             = 0x0008 // Dumper could not find this offset.
 	ObjectTeam              = 0x0034 // Dumper could not find this offset.
 	ObjectDirection         = 0x0080 // Dumper could not find this offset.
@@ -44,7 +48,10 @@ const ( // Buffs related Offsets
 )
 
 const ( // Object lists
-	HeroInterface = 0x1870c68
+	HeroInterface    = 0x1870c68
+	MinionInterface  = 0x24bfab4
+	TurretInterface  = 0x3105acc
+	MissileInterface = 0x24bfa60
 )
 
 const ( // Renderer related Offsets
