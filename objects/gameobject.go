@@ -3,12 +3,20 @@ package objects
 import (
 	"doge/math"
 	"doge/offsets"
-	"doge/win"
+	"doge/windows"
+)
+
+type Team byte
+
+const (
+	RedTeam     Team = 1
+	BlueTeam    Team = 2
+	NeutralTeam Team = 3
 )
 
 type GameObject struct {
 	Index             uint32
-	Team              int32
+	Team              Team
 	Direction         math.Vector3
 	Position          math.Vector3
 	Dead              uint32
@@ -29,7 +37,7 @@ type GameObject struct {
 	ChampionName      string
 }
 
-func ReadGameObject(mem win.Memory, address uint32) (obj GameObject, err error) {
+func ReadGameObject(mem windows.Memory, address uint32) (obj GameObject, err error) {
 	buff, err := mem.ReadBuff(12000, address)
 	if err != nil {
 		return
@@ -42,7 +50,18 @@ func ReadGameObject(mem win.Memory, address uint32) (obj GameObject, err error) 
 	}()
 
 	readPanic(&obj.Index, offsets.ObjectIndex, buff)
-	readPanic(&obj.Team, offsets.ObjectTeam, buff)
+
+	var team uint32
+	readPanic(&team, offsets.ObjectTeam, buff)
+	switch team {
+	case 100:
+		obj.Team = BlueTeam
+	case 200:
+		obj.Team = RedTeam
+	default:
+		obj.Team = NeutralTeam
+	}
+
 	readVectorPanic(&obj.Direction, offsets.ObjectDirection, buff)
 	readVectorPanic(&obj.Position, offsets.ObjectPosition, buff)
 	readPanic(&obj.Dead, offsets.ObjectDead, buff)
@@ -63,4 +82,29 @@ func ReadGameObject(mem win.Memory, address uint32) (obj GameObject, err error) 
 	readPanic(&obj.ChampionName, offsets.ObjectChampionName, buff)
 
 	return
+}
+
+func ReadGameObjectsInterfaceOffsets(mem windows.Memory, address uint32) ([]uint32, error) {
+	var (
+		arrayInterfaceAddress, arrayAddress, arraySize, championAddress uint32
+	)
+	if err := mem.Read(&arrayInterfaceAddress, address); err != nil {
+		return nil, err
+	}
+	if err := mem.Read(&arrayAddress, arrayInterfaceAddress+0x04); err != nil {
+		return nil, err
+	}
+	if err := mem.Read(&arraySize, arrayInterfaceAddress+0x08); err != nil {
+		return nil, err
+	}
+
+	objects := make([]uint32, arraySize)
+	for i := 0; i < int(arraySize); i++ {
+		if err := mem.Read(&championAddress, arrayAddress+(uint32(i)*4)); err != nil {
+			return nil, err
+		}
+		objects[i] = championAddress
+	}
+
+	return objects, nil
 }

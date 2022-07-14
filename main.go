@@ -1,42 +1,21 @@
 package main
 
 import (
-	"doge/objects"
-	"doge/offsets"
-	"doge/win"
+	"doge/app"
 	"log"
 	"time"
 )
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
+	/*log.SetFlags(log.LstdFlags | log.Lmicroseconds)
 
-	process, _ := win.GetProcess("League of Legends.exe")
-	mem := win.NewMemory(process)
-
-	/*var (
-		localPlayer uint32
-		health      float32
-	)
-	_ = mem.Read(&localPlayer, uint32(process.BaseAddress+0x310ed68))
-	_ = mem.Read(&health, localPlayer+0x0E74)
-	fmt.Println(health)*/
-
-	var (
-		localPlayer uint32
-	)
-
-	err := mem.Read(&localPlayer, uint32(process.BaseAddress+offsets.LocalPlayer))
+	process, err := windows.GetProcess("League of Legends.exe")
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
+	mem := windows.NewMemory(process)*/
 
-	defer timeTrack(time.Now(), "struct reading")
-	obj, err := objects.ReadGameObject(mem, localPlayer)
-	if err != nil {
-		panic(err)
-	}
-	log.Printf("%+v\n", obj)
+	app.Start()
 }
 
 func timeTrack(start time.Time, name string) {

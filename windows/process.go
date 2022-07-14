@@ -1,4 +1,4 @@
-package win
+package windows
 
 import (
 	"golang.org/x/sys/windows"

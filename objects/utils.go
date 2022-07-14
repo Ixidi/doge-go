@@ -2,16 +2,16 @@ package objects
 
 import (
 	"doge/math"
-	"doge/win"
+	"doge/windows"
 )
 
-func readPanic(v any, offset uint32, buff win.MemoryBuff) {
+func readPanic(v any, offset uint32, buff windows.MemoryBuff) {
 	if err := buff.Read(v, offset); err != nil {
 		panic(err)
 	}
 }
 
-func readVectorPanic(v *math.Vector3, offset uint32, buff win.MemoryBuff) {
+func readVectorPanic(v *math.Vector3, offset uint32, buff windows.MemoryBuff) {
 	var x, y, z float32
 	readPanic(&x, offset, buff)
 	readPanic(&y, offset+4, buff)
