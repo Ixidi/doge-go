@@ -38,17 +38,13 @@ type GameObject struct {
 }
 
 func ReadGameObject(mem windows.Memory, address uint32) (obj GameObject, err error) {
-	buff, err := mem.ReadBuff(12000, address)
-	if err != nil {
-		return
-	}
-
 	defer func() {
 		if e := recover(); e != nil {
 			err = e.(error)
 		}
 	}()
 
+	buff := readBuffFromMemPanic(12000, address, mem)
 	readFromBuffPanic(&obj.Index, offsets.ObjectIndex, buff)
 
 	var team uint32
@@ -83,27 +79,26 @@ func ReadGameObject(mem windows.Memory, address uint32) (obj GameObject, err err
 	return
 }
 
-func ReadGameObjectsInterfaceOffsets(mem windows.Memory, address uint32) ([]uint32, error) {
+func ReadGameObjectsInterfaceOffsets(mem windows.Memory, address uint32) (result []uint32, err error) {
+	defer func() {
+		if e := recover(); e != nil {
+			err = e.(error)
+		}
+	}()
+
 	var (
 		arrayInterfaceAddress, arrayAddress, arraySize, championAddress uint32
 	)
-	if err := mem.Read(&arrayInterfaceAddress, address); err != nil {
-		return nil, err
-	}
-	if err := mem.Read(&arrayAddress, arrayInterfaceAddress+0x04); err != nil {
-		return nil, err
-	}
-	if err := mem.Read(&arraySize, arrayInterfaceAddress+0x08); err != nil {
-		return nil, err
-	}
+	readFromMemPanic(&arrayInterfaceAddress, address, mem)
+	readFromMemPanic(&arrayAddress, arrayInterfaceAddress+0x04, mem)
+	readFromMemPanic(&arraySize, arrayInterfaceAddress+0x08, mem)
 
 	objects := make([]uint32, arraySize)
 	for i := 0; i < int(arraySize); i++ {
-		if err := mem.Read(&championAddress, arrayAddress+(uint32(i)*4)); err != nil {
-			return nil, err
-		}
+		readFromMemPanic(&championAddress, arrayAddress+(uint32(i)*4), mem)
 		objects[i] = championAddress
 	}
 
-	return objects, nil
+	result = objects
+	return
 }

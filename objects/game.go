@@ -14,24 +14,19 @@ type Game struct {
 }
 
 func ReadGame(mem windows.Memory) (game Game, err error) {
-	baseAddress := mem.Process().BaseAddress
-
-	if err != nil {
-		return
-	}
-
 	defer func() {
 		if e := recover(); e != nil {
 			err = e.(error)
 		}
 	}()
 
+	baseAddress := mem.Process().BaseAddress
+
 	readFromMemPanic(&game.GameTime, baseAddress+offsets.GameTime, mem)
 
 	buff := readBuffFromMemPanic(132, baseAddress+offsets.ViewProjMatrices, mem)
 
 	var viewMatrix, projectionMatrix [16]float32
-
 	for i := 0; i < 16; i++ {
 		readFromBuffPanic(&viewMatrix[i], uint32(i*4), buff)
 	}
@@ -43,11 +38,10 @@ func ReadGame(mem windows.Memory) (game Game, err error) {
 	if err != nil {
 		return
 	}
+
 	game.ViewProjectionMatrix = viewProjectionMatrix
 
-	var (
-		renderAddress uint32
-	)
+	var renderAddress uint32
 	readFromMemPanic(&renderAddress, baseAddress+offsets.Renderer, mem)
 
 	buff = readBuffFromMemPanic(offsets.GameWindowHeight+4, renderAddress, mem)

@@ -57,7 +57,7 @@ func (o *objectManager) Reread() error {
 }
 
 func NewObjectManager(mem windows.Memory) (ObjectManager, error) {
-	baseAddress := uint32(mem.Process().BaseAddress)
+	baseAddress := mem.Process().BaseAddress
 
 	var objectManager objectManager
 	objectManager.mem = mem
@@ -69,9 +69,9 @@ func NewObjectManager(mem windows.Memory) (ObjectManager, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	objectManager.championAddresses = championAddresses
 	objectManager.champions = make([]*GameObject, len(championAddresses))
+
 	err = objectManager.Reread()
 	if err != nil {
 		return nil, err
