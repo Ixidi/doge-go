@@ -7,7 +7,7 @@ import (
 
 type Process struct {
 	Handle      windows.Handle
-	BaseAddress uintptr
+	BaseAddress uint32
 }
 
 func (p *Process) ReadMemory(buff *[]byte, address uint32) error {
@@ -40,7 +40,7 @@ func GetProcess(name string) (Process, error) {
 		return Process{}, err
 	}
 
-	return Process{handle, modInfo.BaseOfDll}, nil
+	return Process{handle, uint32(modInfo.BaseOfDll)}, nil
 }
 
 func getProcessHandle(id uint32) (windows.Handle, error) {

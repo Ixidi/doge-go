@@ -8,6 +8,7 @@ import (
 type ObjectManager interface {
 	LocalPlayer() *GameObject
 	Champions() []*GameObject
+	Game() *Game
 	Reread() error
 }
 
@@ -17,6 +18,7 @@ type objectManager struct {
 	championAddresses  []uint32
 	localPlayer        *GameObject
 	champions          []*GameObject
+	game               *Game
 }
 
 func (o objectManager) LocalPlayer() *GameObject {
@@ -25,6 +27,10 @@ func (o objectManager) LocalPlayer() *GameObject {
 
 func (o objectManager) Champions() []*GameObject {
 	return o.champions
+}
+
+func (o objectManager) Game() *Game {
+	return o.game
 }
 
 func (o *objectManager) Reread() error {
@@ -42,6 +48,11 @@ func (o *objectManager) Reread() error {
 	}
 
 	o.localPlayer = &localPlayer
+	game, err := ReadGame(o.mem)
+	if err != nil {
+		return err
+	}
+	o.game = &game
 	return nil
 }
 

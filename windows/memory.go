@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"reflect"
 	"unsafe"
 )
@@ -102,7 +103,9 @@ func (m memoryBuff) Read(v any, offset uint32) error {
 		*t = string(buff)
 		return nil
 	default:
-		typeSize := uint32(unsafe.Sizeof(&v))
+		typeSize := uint32(unsafe.Sizeof(reflect.Indirect(reflect.ValueOf(v))))
+		fmt.Printf("%T\n", v)
+		fmt.Println(typeSize)
 		return binary.Read(bytes.NewReader(m.b[offset:offset+typeSize]), binary.LittleEndian, v)
 	}
 }

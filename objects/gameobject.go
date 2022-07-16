@@ -49,10 +49,10 @@ func ReadGameObject(mem windows.Memory, address uint32) (obj GameObject, err err
 		}
 	}()
 
-	readPanic(&obj.Index, offsets.ObjectIndex, buff)
+	readFromBuffPanic(&obj.Index, offsets.ObjectIndex, buff)
 
 	var team uint32
-	readPanic(&team, offsets.ObjectTeam, buff)
+	readFromBuffPanic(&team, offsets.ObjectTeam, buff)
 	switch team {
 	case 100:
 		obj.Team = BlueTeam
@@ -62,25 +62,24 @@ func ReadGameObject(mem windows.Memory, address uint32) (obj GameObject, err err
 		obj.Team = NeutralTeam
 	}
 
-	readVectorPanic(&obj.Direction, offsets.ObjectDirection, buff)
-	readVectorPanic(&obj.Position, offsets.ObjectPosition, buff)
-	readPanic(&obj.Dead, offsets.ObjectDead, buff)
-	readPanic(&obj.Visibility, offsets.ObjectVisibility, buff)
-	readPanic(&obj.Mana, offsets.ObjectMana, buff)
-	readPanic(&obj.MaxMana, offsets.ObjectMaxMana, buff)
-	readPanic(&obj.Invulnearable, offsets.ObjectInvulnerable, buff)
-	readPanic(&obj.Targetable, offsets.ObjectTargetable, buff)
-	readPanic(&obj.Health, offsets.ObjectHealth, buff)
-	readPanic(&obj.MaxHealth, offsets.ObjectMaxHealth, buff)
-	readPanic(&obj.BonusAttackDamage, offsets.ObjectBonusAttackDamage, buff)
-	readPanic(&obj.AttackDamage, offsets.ObjectAttackDamage, buff)
-	readPanic(&obj.Armor, offsets.ObjectArmor, buff)
-	readPanic(&obj.BonusArmor, offsets.ObjectBonusArmor, buff)
-	readPanic(&obj.MagicResist, offsets.ObjectMagicResist, buff)
-	readPanic(&obj.MovementSpeed, offsets.ObjectMovementSpeed, buff)
-	readPanic(&obj.AttackRange, offsets.ObjectAttackRange, buff)
-	readPanic(&obj.ChampionName, offsets.ObjectChampionName, buff)
-
+	readVectorFromBuffPanic(&obj.Direction, offsets.ObjectDirection, buff)
+	readVectorFromBuffPanic(&obj.Position, offsets.ObjectPosition, buff)
+	readFromBuffPanic(&obj.Dead, offsets.ObjectDead, buff)
+	readFromBuffPanic(&obj.Visibility, offsets.ObjectVisibility, buff)
+	readFromBuffPanic(&obj.Mana, offsets.ObjectMana, buff)
+	readFromBuffPanic(&obj.MaxMana, offsets.ObjectMaxMana, buff)
+	readFromBuffPanic(&obj.Invulnearable, offsets.ObjectInvulnerable, buff)
+	readFromBuffPanic(&obj.Targetable, offsets.ObjectTargetable, buff)
+	readFromBuffPanic(&obj.Health, offsets.ObjectHealth, buff)
+	readFromBuffPanic(&obj.MaxHealth, offsets.ObjectMaxHealth, buff)
+	readFromBuffPanic(&obj.BonusAttackDamage, offsets.ObjectBonusAttackDamage, buff)
+	readFromBuffPanic(&obj.AttackDamage, offsets.ObjectAttackDamage, buff)
+	readFromBuffPanic(&obj.Armor, offsets.ObjectArmor, buff)
+	readFromBuffPanic(&obj.BonusArmor, offsets.ObjectBonusArmor, buff)
+	readFromBuffPanic(&obj.MagicResist, offsets.ObjectMagicResist, buff)
+	readFromBuffPanic(&obj.MovementSpeed, offsets.ObjectMovementSpeed, buff)
+	readFromBuffPanic(&obj.AttackRange, offsets.ObjectAttackRange, buff)
+	readFromBuffPanic(&obj.ChampionName, offsets.ObjectChampionName, buff)
 	return
 }
 
