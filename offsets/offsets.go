@@ -55,6 +55,8 @@ const ( // Object lists
 )
 
 const ( // Renderer related Offsets
+	GameWindowWidth  = 0xC
+	GameWindowHeight = 0x10
 )
 
 const ( // Utility Offsets

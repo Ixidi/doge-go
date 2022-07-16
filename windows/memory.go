@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"errors"
 	"reflect"
-	"unsafe"
 )
 
 type MemoryBuff interface {
@@ -57,7 +56,7 @@ func (m memory) Read(v any, address uint32) error {
 		*t = string(buff)
 		return nil
 	default:
-		typeSize := unsafe.Sizeof(&v)
+		typeSize := uint32(reflect.Indirect(reflect.ValueOf(v)).Type().Size())
 		buff := make([]byte, typeSize)
 		err := m.process.ReadMemory(&buff, address)
 		if err != nil {
@@ -102,7 +101,7 @@ func (m memoryBuff) Read(v any, offset uint32) error {
 		*t = string(buff)
 		return nil
 	default:
-		typeSize := uint32(unsafe.Sizeof(&v))
+		typeSize := uint32(reflect.Indirect(reflect.ValueOf(v)).Type().Size())
 		return binary.Read(bytes.NewReader(m.b[offset:offset+typeSize]), binary.LittleEndian, v)
 	}
 }
