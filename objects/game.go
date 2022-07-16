@@ -50,7 +50,7 @@ func ReadGame(mem windows.Memory) (game Game, err error) {
 	)
 	readFromMemPanic(&renderAddress, baseAddress+offsets.Renderer, mem)
 
-	buff = readBuffFromMemPanic(14, renderAddress, mem)
+	buff = readBuffFromMemPanic(offsets.GameWindowHeight+4, renderAddress, mem)
 	readFromBuffPanic(&game.WindowWidth, offsets.GameWindowWidth, buff)
 	readFromBuffPanic(&game.WindowHeight, offsets.GameWindowHeight, buff)
 
